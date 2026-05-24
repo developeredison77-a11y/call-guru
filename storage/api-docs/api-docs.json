@@ -1,0 +1,387 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Call Guru API",
+        "description": "Authentication APIs for mobile OTP flow.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api",
+            "description": "API Base URL"
+        }
+    ],
+    "paths": {
+        "/v1/auth/send-otp": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send OTP",
+                "operationId": "007aceb0e800b3e130b0a7b80764a5a9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mobileNumber"
+                                ],
+                                "properties": {
+                                    "mobileNumber": {
+                                        "type": "string",
+                                        "example": "9876543210"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OTP sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "OTP sent successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid mobile",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid mobile number"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/verify-otp": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verify OTP",
+                "operationId": "13daa983c70d922bb2070233aff09593",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mobileNumber",
+                                    "otp"
+                                ],
+                                "properties": {
+                                    "mobileNumber": {
+                                        "type": "string",
+                                        "example": "9876543210"
+                                    },
+                                    "otp": {
+                                        "type": "string",
+                                        "example": "1234"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OTP verified",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Success"
+                                                },
+                                                "isNewUser": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "1|sanctum_token_here"
+                                                },
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Rahul"
+                                                        },
+                                                        "mobileNumber": {
+                                                            "type": "string",
+                                                            "example": "9876543210"
+                                                        },
+                                                        "age": {
+                                                            "type": "integer",
+                                                            "example": 30
+                                                        },
+                                                        "sex": {
+                                                            "type": "string",
+                                                            "example": "Male"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        {
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "User registration required"
+                                                },
+                                                "isNewUser": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid or expired OTP",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid or expired OTP"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register user",
+                "operationId": "501189c078fa4e0494985e8e952b7f61",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mobileNumber",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "mobileNumber": {
+                                        "type": "string",
+                                        "example": "9876543210"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Rahul"
+                                    },
+                                    "age": {
+                                        "type": "integer",
+                                        "example": 30
+                                    },
+                                    "sex": {
+                                        "type": "string",
+                                        "example": "Male",
+                                        "enum": [
+                                            "Male",
+                                            "Female",
+                                            "Other"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registered",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|sanctum_token_here"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Rahul"
+                                                },
+                                                "mobileNumber": {
+                                                    "type": "string",
+                                                    "example": "9876543210"
+                                                },
+                                                "age": {
+                                                    "type": "integer",
+                                                    "example": 30
+                                                },
+                                                "sex": {
+                                                    "type": "string",
+                                                    "example": "Male"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User already exists"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout",
+                "operationId": "e4e9f7c8b49c424ac3b9afb2c0ff6815",
+                "responses": {
+                    "200": {
+                        "description": "Logged out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged out successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Use Bearer token for authenticated endpoints",
+                "scheme": "bearer",
+                "bearerFormat": "Token"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "OTP based authentication endpoints"
+        }
+    ]
+}
