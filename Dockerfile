@@ -8,9 +8,7 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-RUN php artisan optimize:clear
-
-RUN php artisan storage:link
+RUN php artisan storage:link || true
 
 RUN chmod -R 777 storage bootstrap/cache
 
