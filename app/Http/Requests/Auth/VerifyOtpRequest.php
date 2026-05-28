@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Support\PhoneNumbers\IndianMobileNumber;
 use Illuminate\Foundation\Http\FormRequest;
 
 class VerifyOtpRequest extends FormRequest
@@ -14,7 +15,7 @@ class VerifyOtpRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'mobileNumber' => ['required', 'numeric', 'digits:10', 'regex:/^[6-9][0-9]{9}$/'],
+            'mobileNumber' => IndianMobileNumber::validationRules(),
             'otp' => ['required', 'digits:4'],
         ];
     }
@@ -31,4 +32,3 @@ class VerifyOtpRequest extends FormRequest
         ];
     }
 }
-

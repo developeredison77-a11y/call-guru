@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\V1\Auth;
 
-use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\SendOtpRequest;
@@ -13,7 +12,6 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
-use Throwable;
 
 class AuthController extends Controller
 {
@@ -61,15 +59,9 @@ class AuthController extends Controller
     )]
     public function sendOtp(SendOtpRequest $request): JsonResponse
     {
-        try {
-            $this->authService->sendOtp($request->string('mobileNumber')->toString());
+        $this->authService->sendOtp($request->string('mobileNumber')->toString());
 
-            return $this->successResponse(message: 'OTP sent successfully');
-        } catch (ApiException $e) {
-            return $this->errorResponse($e->getMessage(), $e->getStatusCode());
-        } catch (Throwable) {
-            return $this->errorResponse('Failed to send OTP', 500);
-        }
+        return $this->successResponse(message: 'OTP sent successfully');
     }
 
     #[OA\Post(
@@ -137,28 +129,22 @@ class AuthController extends Controller
     )]
     public function verifyOtp(VerifyOtpRequest $request): JsonResponse
     {
-        try {
-            $result = $this->authService->verifyOtp(
-                $request->string('mobileNumber')->toString(),
-                $request->string('otp')->toString()
-            );
+        $result = $this->authService->verifyOtp(
+            $request->string('mobileNumber')->toString(),
+            $request->string('otp')->toString()
+        );
 
-            if ($result['isNewUser'] === true) {
-                return $this->successResponse([
-                    'isNewUser' => true,
-                ], $result['message']);
-            }
-
+        if ($result['isNewUser'] === true) {
             return $this->successResponse([
-                'isNewUser' => false,
-                'token' => $result['token'],
-                'user' => new UserResource($result['user']),
-            ]);
-        } catch (ApiException $e) {
-            return $this->errorResponse($e->getMessage(), $e->getStatusCode());
-        } catch (Throwable) {
-            return $this->errorResponse('Failed to verify OTP', 500);
+                'isNewUser' => true,
+            ], $result['message']);
         }
+
+        return $this->successResponse([
+            'isNewUser' => false,
+            'token' => $result['token'],
+            'user' => new UserResource($result['user']),
+        ]);
     }
 
     #[OA\Post(
@@ -214,18 +200,12 @@ class AuthController extends Controller
     )]
     public function register(RegisterRequest $request): JsonResponse
     {
-        try {
-            $result = $this->authService->register($request->validated());
+        $result = $this->authService->register($request->validated());
 
-            return $this->successResponse([
-                'token' => $result['token'],
-                'user' => new UserResource($result['user']),
-            ]);
-        } catch (ApiException $e) {
-            return $this->errorResponse($e->getMessage(), $e->getStatusCode());
-        } catch (Throwable) {
-            return $this->errorResponse('Failed to register user', 500);
-        }
+        return $this->successResponse([
+            'token' => $result['token'],
+            'user' => new UserResource($result['user']),
+        ]);
     }
 
     #[OA\Post(
@@ -249,7 +229,7 @@ class AuthController extends Controller
     )]
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken()?->delete();
 
         return $this->successResponse(message: 'Logged out successfully');
     }

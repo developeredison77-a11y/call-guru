@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use App\Enums\SexEnum;
+use App\Support\PhoneNumbers\IndianMobileNumber;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -16,7 +17,7 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'mobileNumber' => ['required', 'numeric', 'digits:10', 'regex:/^[6-9][0-9]{9}$/', 'unique:users,mobile_number'],
+            'mobileNumber' => IndianMobileNumber::validationRules(unique: true),
             'name' => ['required', 'string', 'max:100'],
             'age' => ['nullable', 'integer', 'min:1', 'max:120'],
             'sex' => ['nullable', Rule::in(SexEnum::values())],
@@ -32,4 +33,3 @@ class RegisterRequest extends FormRequest
         ];
     }
 }
-

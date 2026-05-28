@@ -5,25 +5,33 @@ namespace App\Services\Auth;
 use App\Exceptions\ApiException;
 use App\Helpers\OtpHelper;
 use App\Repositories\Auth\OtpVerificationRepository;
-use App\Models\User;
+use App\Repositories\Auth\UserRepository;
+use App\Support\PhoneNumbers\IndianMobileNumber;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
-    public function __construct(private readonly OtpVerificationRepository $otpRepository)
-    {
-    }
+    private const OTP_LENGTH = 4;
+
+    private const OTP_TTL_MINUTES = 5;
+
+    private const TOKEN_NAME = 'auth_token';
+
+    public function __construct(
+        private readonly OtpVerificationRepository $otpRepository,
+        private readonly UserRepository $userRepository,
+    ) {}
 
     public function sendOtp(string $mobileNumber): void
     {
-        if (! $this->isAllowedMobileNumber($mobileNumber)) {
+        if (! IndianMobileNumber::isValid($mobileNumber)) {
             throw new ApiException('Invalid mobile number', 422);
         }
 
-        $otp = OtpHelper::generate(4);
-        $expiresAt = Carbon::now()->addMinutes(5);
+        $otp = OtpHelper::generate(self::OTP_LENGTH);
+        $expiresAt = Carbon::now()->addMinutes(self::OTP_TTL_MINUTES);
 
         $this->otpRepository->upsertOtp($mobileNumber, Hash::make($otp), $expiresAt);
     }
@@ -36,11 +44,11 @@ class AuthService
             throw new ApiException('Invalid or expired OTP', 422);
         }
 
-        DB::transaction(function () use ($otpVerification) {
+        DB::transaction(function () use ($otpVerification): void {
             $this->otpRepository->markVerified($otpVerification, Carbon::now());
         });
 
-        $user = User::query()->where('mobile_number', $mobileNumber)->first();
+        $user = $this->userRepository->findByMobileNumber($mobileNumber);
 
         if (! $user) {
             return [
@@ -49,7 +57,7 @@ class AuthService
             ];
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $user->createToken(self::TOKEN_NAME)->plainTextToken;
 
         return [
             'isNewUser' => false,
@@ -62,7 +70,7 @@ class AuthService
     {
         $mobileNumber = $payload['mobileNumber'];
 
-        if (User::query()->where('mobile_number', $mobileNumber)->exists()) {
+        if ($this->userRepository->existsByMobileNumber($mobileNumber)) {
             throw new ApiException('User already exists', 409);
         }
 
@@ -73,7 +81,7 @@ class AuthService
         }
 
         $user = DB::transaction(function () use ($payload, $mobileNumber) {
-            return User::query()->create([
+            return $this->userRepository->create([
                 'name' => $payload['name'],
                 'mobile_number' => $mobileNumber,
                 'age' => $payload['age'] ?? null,
@@ -81,7 +89,7 @@ class AuthService
             ]);
         });
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $user->createToken(self::TOKEN_NAME)->plainTextToken;
 
         return [
             'token' => $token,
@@ -89,9 +97,4 @@ class AuthService
         ];
     }
 
-    private function isAllowedMobileNumber(string $mobileNumber): bool
-    {
-        return preg_match('/^[6-9][0-9]{9}$/', $mobileNumber) === 1;
-    }
 }
-
