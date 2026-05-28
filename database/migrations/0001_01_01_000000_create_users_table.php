@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('mobile_number', 10)->unique();
-            $table->unsignedTinyInteger('age')->nullable();
+            $table->date('date_of_birth')->nullable();
             $table->string('sex', 10)->nullable();
             $table->rememberToken();
             $table->timestamps();

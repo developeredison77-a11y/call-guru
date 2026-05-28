@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'country_code' => '+91',
             'mobile_number' => '9876543210',
-            'age' => 30,
+            'date_of_birth' => '1996-05-28',
             'sex' => 'Male',
         ]);
     }

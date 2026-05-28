@@ -25,7 +25,7 @@ class RegisterRequest extends FormRequest
                 ),
             ],
             'name' => ['required', 'string', 'max:100'],
-            'age' => ['nullable', 'integer', 'min:1', 'max:120'],
+            'date_of_birth' => ['nullable', 'date', 'before_or_equal:today'],
             'sex' => ['nullable', Rule::in(SexEnum::values())],
         ];
     }
@@ -37,6 +37,8 @@ class RegisterRequest extends FormRequest
             'countryCode.in' => 'Country code must be +91.',
             'mobileNumber.required' => 'Mobile number is required.',
             'mobileNumber.unique' => 'User already exists.',
+            'date_of_birth.date' => 'Date of birth must be a valid ISO date string.',
+            'date_of_birth.before_or_equal' => 'Date of birth cannot be in the future.',
             'sex.in' => 'Sex must be Male, Female, or Other.',
         ];
     }

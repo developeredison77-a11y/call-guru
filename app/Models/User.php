@@ -23,7 +23,7 @@ class User extends Authenticatable
         'name',
         'country_code',
         'mobile_number',
-        'age',
+        'date_of_birth',
         'sex',
     ];
 
@@ -44,7 +44,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'age' => 'integer',
+            'date_of_birth' => 'date',
         ];
     }
 

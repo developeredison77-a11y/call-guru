@@ -96,7 +96,9 @@ class AuthService
                 'name' => $payload['name'],
                 'country_code' => $countryCode,
                 'mobile_number' => $mobileNumber,
-                'age' => $payload['age'] ?? null,
+                'date_of_birth' => isset($payload['date_of_birth'])
+                    ? Carbon::parse($payload['date_of_birth'])->toDateString()
+                    : null,
                 'sex' => $payload['sex'] ?? null,
             ]);
         });

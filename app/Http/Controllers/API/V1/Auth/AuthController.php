@@ -105,7 +105,7 @@ class AuthController extends Controller
                                         new OA\Property(property: 'name', type: 'string', example: 'Rahul'),
                                         new OA\Property(property: 'countryCode', type: 'string', example: '+91'),
                                         new OA\Property(property: 'mobileNumber', type: 'string', example: '9876543210'),
-                                        new OA\Property(property: 'age', type: 'integer', example: 30),
+                                        new OA\Property(property: 'date_of_birth', type: 'string', format: 'date-time', example: '1996-05-28T00:00:00.000Z'),
                                         new OA\Property(property: 'sex', type: 'string', example: 'Male'),
                                     ],
                                     type: 'object'
@@ -169,7 +169,7 @@ class AuthController extends Controller
                     new OA\Property(property: 'countryCode', type: 'string', example: '+91'),
                     new OA\Property(property: 'mobileNumber', type: 'string', example: '9876543210'),
                     new OA\Property(property: 'name', type: 'string', example: 'Rahul'),
-                    new OA\Property(property: 'age', type: 'integer', example: 30),
+                    new OA\Property(property: 'date_of_birth', type: 'string', format: 'date-time', example: '1996-05-28T00:00:00.000Z'),
                     new OA\Property(property: 'sex', type: 'string', enum: ['Male', 'Female', 'Other'], example: 'Male'),
                 ]
             )
@@ -190,7 +190,7 @@ class AuthController extends Controller
                                 new OA\Property(property: 'name', type: 'string', example: 'Rahul'),
                                 new OA\Property(property: 'countryCode', type: 'string', example: '+91'),
                                 new OA\Property(property: 'mobileNumber', type: 'string', example: '9876543210'),
-                                new OA\Property(property: 'age', type: 'integer', example: 30),
+                                new OA\Property(property: 'date_of_birth', type: 'string', format: 'date-time', example: '1996-05-28T00:00:00.000Z'),
                                 new OA\Property(property: 'sex', type: 'string', example: 'Male'),
                             ],
                             type: 'object'
