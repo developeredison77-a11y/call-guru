@@ -4,6 +4,11 @@ use App\Http\Controllers\API\V1\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
+    Route::get('/test', fn () => response()->json([
+        'success' => true,
+        'message' => 'API is working',
+    ]));
+
     Route::prefix('auth')->group(function () {
         Route::post('/send-otp', [AuthController::class, 'sendOtp']);
         Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
@@ -12,4 +17,3 @@ Route::prefix('v1')->group(function () {
         Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
     });
 });
-
