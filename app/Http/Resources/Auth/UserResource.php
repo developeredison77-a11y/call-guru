@@ -12,10 +12,10 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'countryCode' => $this->country_code,
             'mobileNumber' => $this->mobile_number,
             'age' => $this->age,
             'sex' => $this->sex,
         ];
     }
 }
-

@@ -6,16 +6,18 @@ use App\Models\User;
 
 class UserRepository
 {
-    public function findByMobileNumber(string $mobileNumber): ?User
+    public function findByMobileNumber(string $countryCode, string $mobileNumber): ?User
     {
         return User::query()
+            ->where('country_code', $countryCode)
             ->where('mobile_number', $mobileNumber)
             ->first();
     }
 
-    public function existsByMobileNumber(string $mobileNumber): bool
+    public function existsByMobileNumber(string $countryCode, string $mobileNumber): bool
     {
         return User::query()
+            ->where('country_code', $countryCode)
             ->where('mobile_number', $mobileNumber)
             ->exists();
     }

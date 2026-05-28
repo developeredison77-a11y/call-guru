@@ -4,7 +4,14 @@ namespace App\Support\PhoneNumbers;
 
 class IndianMobileNumber
 {
+    public const COUNTRY_CODE = '+91';
+
     public const PATTERN = '/^[6-9][0-9]{9}$/';
+
+    public static function isValidCountryCode(string $countryCode): bool
+    {
+        return $countryCode === self::COUNTRY_CODE;
+    }
 
     public static function isValid(string $mobileNumber): bool
     {
@@ -20,5 +27,10 @@ class IndianMobileNumber
         }
 
         return $rules;
+    }
+
+    public static function countryCodeValidationRules(): array
+    {
+        return ['required', 'string', 'in:'.self::COUNTRY_CODE];
     }
 }

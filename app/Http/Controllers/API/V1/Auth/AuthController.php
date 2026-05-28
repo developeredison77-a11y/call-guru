@@ -28,8 +28,9 @@ class AuthController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['mobileNumber'],
+                required: ['countryCode', 'mobileNumber'],
                 properties: [
+                    new OA\Property(property: 'countryCode', type: 'string', example: '+91'),
                     new OA\Property(property: 'mobileNumber', type: 'string', example: '9876543210'),
                 ]
             )
@@ -42,6 +43,7 @@ class AuthController extends Controller
                     properties: [
                         new OA\Property(property: 'success', type: 'boolean', example: true),
                         new OA\Property(property: 'message', type: 'string', example: 'OTP sent successfully'),
+                        new OA\Property(property: 'otp', type: 'string', example: '123456'),
                     ]
                 )
             ),
@@ -59,9 +61,14 @@ class AuthController extends Controller
     )]
     public function sendOtp(SendOtpRequest $request): JsonResponse
     {
-        $this->authService->sendOtp($request->string('mobileNumber')->toString());
+        $otp = $this->authService->sendOtp(
+            $request->string('countryCode')->toString(),
+            $request->string('mobileNumber')->toString()
+        );
 
-        return $this->successResponse(message: 'OTP sent successfully');
+        return $this->successResponse([
+            'otp' => $otp,
+        ], 'OTP sent successfully');
     }
 
     #[OA\Post(
@@ -71,10 +78,11 @@ class AuthController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['mobileNumber', 'otp'],
+                required: ['countryCode', 'mobileNumber', 'otp'],
                 properties: [
+                    new OA\Property(property: 'countryCode', type: 'string', example: '+91'),
                     new OA\Property(property: 'mobileNumber', type: 'string', example: '9876543210'),
-                    new OA\Property(property: 'otp', type: 'string', example: '1234'),
+                    new OA\Property(property: 'otp', type: 'string', example: '123456'),
                 ]
             )
         ),
@@ -95,6 +103,7 @@ class AuthController extends Controller
                                     properties: [
                                         new OA\Property(property: 'id', type: 'integer', example: 1),
                                         new OA\Property(property: 'name', type: 'string', example: 'Rahul'),
+                                        new OA\Property(property: 'countryCode', type: 'string', example: '+91'),
                                         new OA\Property(property: 'mobileNumber', type: 'string', example: '9876543210'),
                                         new OA\Property(property: 'age', type: 'integer', example: 30),
                                         new OA\Property(property: 'sex', type: 'string', example: 'Male'),
@@ -121,7 +130,7 @@ class AuthController extends Controller
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'success', type: 'boolean', example: false),
-                        new OA\Property(property: 'message', type: 'string', example: 'Invalid or expired OTP'),
+                        new OA\Property(property: 'message', type: 'string', example: 'Invalid OTP'),
                     ]
                 )
             ),
@@ -130,6 +139,7 @@ class AuthController extends Controller
     public function verifyOtp(VerifyOtpRequest $request): JsonResponse
     {
         $result = $this->authService->verifyOtp(
+            $request->string('countryCode')->toString(),
             $request->string('mobileNumber')->toString(),
             $request->string('otp')->toString()
         );
@@ -154,8 +164,9 @@ class AuthController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['mobileNumber', 'name'],
+                required: ['countryCode', 'mobileNumber', 'name'],
                 properties: [
+                    new OA\Property(property: 'countryCode', type: 'string', example: '+91'),
                     new OA\Property(property: 'mobileNumber', type: 'string', example: '9876543210'),
                     new OA\Property(property: 'name', type: 'string', example: 'Rahul'),
                     new OA\Property(property: 'age', type: 'integer', example: 30),
@@ -177,6 +188,7 @@ class AuthController extends Controller
                             properties: [
                                 new OA\Property(property: 'id', type: 'integer', example: 1),
                                 new OA\Property(property: 'name', type: 'string', example: 'Rahul'),
+                                new OA\Property(property: 'countryCode', type: 'string', example: '+91'),
                                 new OA\Property(property: 'mobileNumber', type: 'string', example: '9876543210'),
                                 new OA\Property(property: 'age', type: 'integer', example: 30),
                                 new OA\Property(property: 'sex', type: 'string', example: 'Male'),

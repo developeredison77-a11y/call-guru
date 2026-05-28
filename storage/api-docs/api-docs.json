@@ -25,9 +25,14 @@
                         "application/json": {
                             "schema": {
                                 "required": [
+                                    "countryCode",
                                     "mobileNumber"
                                 ],
                                 "properties": {
+                                    "countryCode": {
+                                        "type": "string",
+                                        "example": "+91"
+                                    },
                                     "mobileNumber": {
                                         "type": "string",
                                         "example": "9876543210"
@@ -52,6 +57,10 @@
                                         "message": {
                                             "type": "string",
                                             "example": "OTP sent successfully"
+                                        },
+                                        "otp": {
+                                            "type": "string",
+                                            "example": "123456"
                                         }
                                     },
                                     "type": "object"
@@ -95,17 +104,22 @@
                         "application/json": {
                             "schema": {
                                 "required": [
+                                    "countryCode",
                                     "mobileNumber",
                                     "otp"
                                 ],
                                 "properties": {
+                                    "countryCode": {
+                                        "type": "string",
+                                        "example": "+91"
+                                    },
                                     "mobileNumber": {
                                         "type": "string",
                                         "example": "9876543210"
                                     },
                                     "otp": {
                                         "type": "string",
-                                        "example": "1234"
+                                        "example": "123456"
                                     }
                                 },
                                 "type": "object"
@@ -147,6 +161,10 @@
                                                         "name": {
                                                             "type": "string",
                                                             "example": "Rahul"
+                                                        },
+                                                        "countryCode": {
+                                                            "type": "string",
+                                                            "example": "+91"
                                                         },
                                                         "mobileNumber": {
                                                             "type": "string",
@@ -200,7 +218,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Invalid or expired OTP"
+                                            "example": "Invalid OTP"
                                         }
                                     },
                                     "type": "object"
@@ -224,10 +242,15 @@
                         "application/json": {
                             "schema": {
                                 "required": [
+                                    "countryCode",
                                     "mobileNumber",
                                     "name"
                                 ],
                                 "properties": {
+                                    "countryCode": {
+                                        "type": "string",
+                                        "example": "+91"
+                                    },
                                     "mobileNumber": {
                                         "type": "string",
                                         "example": "9876543210"
@@ -283,6 +306,10 @@
                                                 "name": {
                                                     "type": "string",
                                                     "example": "Rahul"
+                                                },
+                                                "countryCode": {
+                                                    "type": "string",
+                                                    "example": "+91"
                                                 },
                                                 "mobileNumber": {
                                                     "type": "string",

@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'name' => 'Test User',
+            'country_code' => '+91',
             'mobile_number' => '9876543210',
             'age' => 30,
             'sex' => 'Male',

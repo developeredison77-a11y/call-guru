@@ -17,7 +17,13 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'mobileNumber' => IndianMobileNumber::validationRules(unique: true),
+            'countryCode' => IndianMobileNumber::countryCodeValidationRules(),
+            'mobileNumber' => [
+                ...IndianMobileNumber::validationRules(),
+                Rule::unique('users', 'mobile_number')->where(
+                    fn ($query) => $query->where('country_code', $this->input('countryCode'))
+                ),
+            ],
             'name' => ['required', 'string', 'max:100'],
             'age' => ['nullable', 'integer', 'min:1', 'max:120'],
             'sex' => ['nullable', Rule::in(SexEnum::values())],
@@ -27,6 +33,8 @@ class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'countryCode.required' => 'Country code is required.',
+            'countryCode.in' => 'Country code must be +91.',
             'mobileNumber.required' => 'Mobile number is required.',
             'mobileNumber.unique' => 'User already exists.',
             'sex.in' => 'Sex must be Male, Female, or Other.',

@@ -21,6 +21,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'country_code',
         'mobile_number',
         'age',
         'sex',
@@ -49,6 +50,7 @@ class User extends Authenticatable
 
     public function otpVerification(): HasOne
     {
-        return $this->hasOne(OtpVerification::class, 'mobile_number', 'mobile_number');
+        return $this->hasOne(OtpVerification::class, 'mobile_number', 'mobile_number')
+            ->whereColumn('otp_verifications.country_code', 'users.country_code');
     }
 }

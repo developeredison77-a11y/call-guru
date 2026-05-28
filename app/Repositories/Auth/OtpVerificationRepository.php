@@ -7,15 +7,21 @@ use Carbon\Carbon;
 
 class OtpVerificationRepository
 {
-    public function findByMobileNumber(string $mobileNumber): ?OtpVerification
+    public function findByMobileNumber(string $countryCode, string $mobileNumber): ?OtpVerification
     {
-        return OtpVerification::query()->where('mobile_number', $mobileNumber)->first();
+        return OtpVerification::query()
+            ->where('country_code', $countryCode)
+            ->where('mobile_number', $mobileNumber)
+            ->first();
     }
 
-    public function upsertOtp(string $mobileNumber, string $hashedOtp, Carbon $expiresAt): OtpVerification
+    public function upsertOtp(string $countryCode, string $mobileNumber, string $hashedOtp, Carbon $expiresAt): OtpVerification
     {
         return OtpVerification::query()->updateOrCreate(
-            ['mobile_number' => $mobileNumber],
+            [
+                'country_code' => $countryCode,
+                'mobile_number' => $mobileNumber,
+            ],
             [
                 'otp' => $hashedOtp,
                 'expires_at' => $expiresAt,
@@ -33,4 +39,3 @@ class OtpVerificationRepository
         ]);
     }
 }
-

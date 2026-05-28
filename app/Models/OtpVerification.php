@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class OtpVerification extends Model
 {
     protected $fillable = [
+        'country_code',
         'mobile_number',
         'otp',
         'expires_at',
@@ -23,4 +24,3 @@ class OtpVerification extends Model
         ];
     }
 }
-

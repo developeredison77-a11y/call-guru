@@ -19,6 +19,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'country_code' => '+91',
             'mobile_number' => (string) fake()->unique()->numberBetween(6000000000, 9999999999),
             'age' => fake()->numberBetween(18, 60),
             'sex' => fake()->randomElement(['Male', 'Female', 'Other']),

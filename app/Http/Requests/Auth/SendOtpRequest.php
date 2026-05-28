@@ -15,6 +15,7 @@ class SendOtpRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'countryCode' => IndianMobileNumber::countryCodeValidationRules(),
             'mobileNumber' => IndianMobileNumber::validationRules(),
         ];
     }
@@ -22,6 +23,8 @@ class SendOtpRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'countryCode.required' => 'Country code is required.',
+            'countryCode.in' => 'Country code must be +91.',
             'mobileNumber.required' => 'Mobile number is required.',
             'mobileNumber.numeric' => 'Mobile number must be numeric.',
             'mobileNumber.digits' => 'Mobile number must be exactly 10 digits.',
