@@ -126,7 +126,8 @@
         const urls = [];
 
         @foreach($urlsToDocs as $title => $url)
-            urls.push({name: "{{ $title }}", url: "{{ $url }}"});
+            @php($swaggerUrl = preg_replace('/\?([^?]+)$/', '/$1', $url))
+            urls.push({name: @json($title), url: @json($swaggerUrl)});
         @endforeach
 
         // Build a system
