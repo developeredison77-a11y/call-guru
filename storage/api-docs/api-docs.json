@@ -243,7 +243,8 @@
                                 "required": [
                                     "countryCode",
                                     "mobileNumber",
-                                    "name"
+                                    "name",
+                                    "languages"
                                 ],
                                 "properties": {
                                     "countryCode": {
@@ -280,8 +281,7 @@
                                         "example": [
                                             1,
                                             2
-                                        ],
-                                        "nullable": true
+                                        ]
                                     }
                                 },
                                 "type": "object"

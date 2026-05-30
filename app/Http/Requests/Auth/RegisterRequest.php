@@ -28,10 +28,12 @@ class RegisterRequest extends FormRequest
             'date_of_birth' => ['nullable', 'date', 'before_or_equal:today'],
             'sex' => ['nullable', Rule::in(SexEnum::values())],
             'languages' => [
-                'nullable',
+                'required',
                 'array',
+                'min:1',
             ],
             'languages.*' => [
+                'required',
                 'integer',
                 'distinct',
                 Rule::exists('languages', 'id')->whereNull('deleted_at'),
@@ -49,7 +51,9 @@ class RegisterRequest extends FormRequest
             'date_of_birth.date' => 'Date of birth must be a valid ISO date string.',
             'date_of_birth.before_or_equal' => 'Date of birth cannot be in the future.',
             'sex.in' => 'Sex must be Male, Female, or Other.',
+            'languages.required' => 'At least one language is required.',
             'languages.array' => 'Languages must be provided as an array.',
+            'languages.min' => 'At least one language is required.',
             'languages.*.distinct' => 'Each selected language must be unique.',
             'languages.*.exists' => 'One or more selected languages are invalid.',
         ];

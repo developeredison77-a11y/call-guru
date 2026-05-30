@@ -164,7 +164,7 @@ class AuthController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['countryCode', 'mobileNumber', 'name'],
+                required: ['countryCode', 'mobileNumber', 'name', 'languages'],
                 properties: [
                     new OA\Property(property: 'countryCode', type: 'string', example: '+91'),
                     new OA\Property(property: 'mobileNumber', type: 'string', example: '9876543210'),
@@ -174,7 +174,6 @@ class AuthController extends Controller
                     new OA\Property(
                         property: 'languages',
                         type: 'array',
-                        nullable: true,
                         items: new OA\Items(type: 'integer'),
                         example: [1, 2]
                     ),

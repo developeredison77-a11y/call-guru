@@ -127,6 +127,7 @@
 
         @foreach($urlsToDocs as $title => $url)
             @php($swaggerUrl = preg_replace('/\?([^?]+)$/', '/$1', $url))
+            @php($swaggerUrl .= '?v='.(filemtime(public_path('docs/api-docs.json')) ?: time()))
             urls.push({name: @json($title), url: @json($swaggerUrl)});
         @endforeach
 
