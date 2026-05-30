@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\ClientController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\FaqController;
 use App\Http\Controllers\Backend\GurujiController;
+use App\Http\Controllers\Backend\LanguageController;
 use App\Http\Controllers\Backend\ListenerController;
 use App\Http\Controllers\Backend\ProfileController;
 use App\Http\Controllers\Backend\SettingsController;
@@ -40,6 +41,8 @@ Route::middleware(['auth', 'superadmin'])->prefix('dashboard')->group(function (
     Route::delete('/gurujis/{guruji}', [GurujiController::class, 'destroy'])->name('gurujis.destroy');
     Route::resource('categories', CategoryController::class)->except('show');
     Route::patch('/categories/{category}/status', [CategoryController::class, 'toggleStatus'])->name('categories.toggle-status');
+    Route::resource('languages', LanguageController::class)->except('show');
+    Route::patch('/languages/{language}/status', [LanguageController::class, 'toggleStatus'])->name('languages.toggle-status');
     Route::resource('terms-and-conditions', TermsAndConditionController::class)
         ->parameters(['terms-and-conditions' => 'termsAndCondition'])
         ->except('show');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\V1\Auth;
 
+use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\SendOtpRequest;
@@ -10,15 +11,14 @@ use App\Services\Auth\AuthService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Laravel\Sanctum\PersonalAccessToken;
 use OpenApi\Attributes as OA;
 
 class AuthController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(private readonly AuthService $authService)
-    {
-    }
+    public function __construct(private readonly AuthService $authService) {}
 
     #[OA\Post(
         path: '/v1/auth/send-otp',
@@ -171,6 +171,7 @@ class AuthController extends Controller
                     new OA\Property(property: 'name', type: 'string', example: 'Rahul'),
                     new OA\Property(property: 'date_of_birth', type: 'string', format: 'date-time', example: '1996-05-28T00:00:00.000Z'),
                     new OA\Property(property: 'sex', type: 'string', enum: ['Male', 'Female', 'Other'], example: 'Male'),
+                    new OA\Property(property: 'language', type: 'integer', nullable: true, example: 1),
                 ]
             )
         ),
@@ -208,6 +209,53 @@ class AuthController extends Controller
         return $this->successResponse([
             'id' => $result['user']->id,
             'name' => $result['user']->name,
+            'accessToken' => $result['accessToken'],
+            'refreshToken' => $result['refreshToken'],
+        ]);
+    }
+
+    #[OA\Post(
+        path: '/v1/auth/refresh-token',
+        summary: 'Refresh access token',
+        security: [['sanctum' => []]],
+        tags: ['Auth'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Token refreshed',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
+                        new OA\Property(property: 'message', type: 'string', example: 'Success'),
+                        new OA\Property(property: 'accessToken', type: 'string', example: '9|sanctum_access_token_here'),
+                        new OA\Property(property: 'refreshToken', type: 'string', example: '10|sanctum_refresh_token_here'),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Invalid refresh token or inactive account',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(property: 'message', type: 'string', example: 'Invalid refresh token.'),
+                    ]
+                )
+            ),
+            new OA\Response(response: 401, description: 'Unauthenticated'),
+        ]
+    )]
+    public function refreshToken(Request $request): JsonResponse
+    {
+        $token = $request->user()->currentAccessToken();
+
+        if (! $token instanceof PersonalAccessToken) {
+            throw new ApiException('Invalid refresh token.', 403);
+        }
+
+        $result = $this->authService->refreshToken($token);
+
+        return $this->successResponse([
             'accessToken' => $result['accessToken'],
             'refreshToken' => $result['refreshToken'],
         ]);

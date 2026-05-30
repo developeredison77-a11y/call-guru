@@ -12,6 +12,7 @@ use App\Support\PhoneNumbers\IndianMobileNumber;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthService
 {
@@ -110,6 +111,7 @@ class AuthService
                     ? Carbon::parse($payload['date_of_birth'])->toDateString()
                     : null,
                 'sex' => $payload['sex'] ?? null,
+                'language' => $payload['language'] ?? null,
                 'status' => UserStatusEnum::Inactive->value,
                 'type' => UserTypeEnum::Listener->value,
             ]);
@@ -123,5 +125,30 @@ class AuthService
             'refreshToken' => $refreshToken,
             'user' => $user,
         ];
+    }
+
+    public function refreshToken(PersonalAccessToken $token): array
+    {
+        $user = $token->tokenable;
+
+        if ($token->name !== self::REFRESH_TOKEN_NAME || ! $token->can('refresh')) {
+            throw new ApiException('Invalid refresh token.', 403);
+        }
+
+        if ((int) $user->status === UserStatusEnum::Inactive->value) {
+            throw new ApiException('Your account is inactive. Please contact the administrator.', 403);
+        }
+
+        return DB::transaction(function () use ($token, $user): array {
+            $accessToken = $user->createToken(self::TOKEN_NAME)->plainTextToken;
+            $refreshToken = $user->createToken(self::REFRESH_TOKEN_NAME, ['refresh'])->plainTextToken;
+
+            $token->delete();
+
+            return [
+                'accessToken' => $accessToken,
+                'refreshToken' => $refreshToken,
+            ];
+        });
     }
 }

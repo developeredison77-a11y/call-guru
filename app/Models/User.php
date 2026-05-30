@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -29,6 +30,7 @@ class User extends Authenticatable
         'mobile_number',
         'date_of_birth',
         'sex',
+        'language',
         'status',
         'type',
     ];
@@ -55,6 +57,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'status' => 'integer',
             'type' => 'integer',
+            'language' => 'integer',
         ];
     }
 
@@ -62,5 +65,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(OtpVerification::class, 'mobile_number', 'mobile_number')
             ->whereColumn('otp_verifications.country_code', 'users.country_code');
+    }
+
+    public function languageDetails(): BelongsTo
+    {
+        return $this->belongsTo(Language::class, 'language');
     }
 }

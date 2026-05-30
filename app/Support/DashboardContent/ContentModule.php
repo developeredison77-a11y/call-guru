@@ -17,6 +17,16 @@ class ContentModule
     /**
      * @return array<string, mixed>
      */
+    public static function languages(): array
+    {
+        return self::make('languages', 'Languages', 'Language', 'Language management', [
+            ['name' => 'name', 'label' => 'Name', 'type' => 'text'],
+        ], false);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
     public static function termsAndConditions(): array
     {
         return self::make('terms-and-conditions', 'Terms and Conditions', 'Terms and Conditions', 'Terms and Conditions management', [

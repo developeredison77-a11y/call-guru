@@ -23,6 +23,10 @@
             ['label' => 'Dashboard', 'url' => route('dashboard')],
             ['label' => 'Categories'],
         ],
+        request()->routeIs('languages.*') => [
+            ['label' => 'Dashboard', 'url' => route('dashboard')],
+            ['label' => 'Languages'],
+        ],
         request()->routeIs('terms-and-conditions.*') => [
             ['label' => 'Dashboard', 'url' => route('dashboard')],
             ['label' => 'Terms and Conditions'],
@@ -96,6 +100,10 @@
 
                 <x-dashboard.nav-link :href="route('categories.index')" icon="categories" :active="request()->routeIs('categories.*')">
                     Categories
+                </x-dashboard.nav-link>
+
+                <x-dashboard.nav-link :href="route('languages.index')" icon="categories" :active="request()->routeIs('languages.*')">
+                    Languages
                 </x-dashboard.nav-link>
 
                 <x-dashboard.nav-link :href="route('terms-and-conditions.index')" icon="terms" :active="request()->routeIs('terms-and-conditions.*')">

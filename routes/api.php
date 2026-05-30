@@ -14,6 +14,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
         Route::post('/register', [AuthController::class, 'register']);
 
-        Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
+            Route::post('/logout', [AuthController::class, 'logout']);
+        });
     });
 });
