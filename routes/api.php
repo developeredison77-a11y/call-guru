@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\V1\Auth\AuthController;
+use App\Http\Controllers\API\V1\LanguageController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -8,6 +9,8 @@ Route::prefix('v1')->group(function () {
         'success' => true,
         'message' => 'API is working',
     ]));
+
+    Route::get('/languages', [LanguageController::class, 'index']);
 
     Route::prefix('auth')->group(function () {
         Route::post('/send-otp', [AuthController::class, 'sendOtp']);

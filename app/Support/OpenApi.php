@@ -17,13 +17,14 @@ use OpenApi\Attributes as OA;
     name: 'Auth',
     description: 'OTP based authentication endpoints'
 )]
+#[OA\Tag(
+    name: 'Languages',
+    description: 'Public language endpoints'
+)]
 #[OA\SecurityScheme(
     securityScheme: 'sanctum',
     type: 'http',
     scheme: 'bearer',
     bearerFormat: 'Token'
 )]
-class OpenApi
-{
-}
-
+class OpenApi {}

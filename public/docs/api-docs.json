@@ -448,6 +448,53 @@
                     }
                 ]
             }
+        },
+        "/v1/languages": {
+            "get": {
+                "tags": [
+                    "Languages"
+                ],
+                "summary": "List active languages",
+                "operationId": "418d5331301d92365c21e7b7f831904b",
+                "responses": {
+                    "200": {
+                        "description": "Languages retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "languages": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "English"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -464,6 +511,10 @@
         {
             "name": "Auth",
             "description": "OTP based authentication endpoints"
+        },
+        {
+            "name": "Languages",
+            "description": "Public language endpoints"
         }
     ]
 }
