@@ -103,7 +103,7 @@ class AuthService
         }
 
         $user = DB::transaction(function () use ($payload, $countryCode, $mobileNumber) {
-            return $this->userRepository->create([
+            $user = $this->userRepository->create([
                 'name' => $payload['name'],
                 'country_code' => $countryCode,
                 'mobile_number' => $mobileNumber,
@@ -111,10 +111,15 @@ class AuthService
                     ? Carbon::parse($payload['date_of_birth'])->toDateString()
                     : null,
                 'sex' => $payload['sex'] ?? null,
-                'language' => $payload['language'] ?? null,
                 'status' => UserStatusEnum::Inactive->value,
                 'type' => UserTypeEnum::Listener->value,
             ]);
+
+            if (isset($payload['language'])) {
+                $user->languages()->attach($payload['language']);
+            }
+
+            return $user;
         });
 
         $accessToken = $user->createToken(self::TOKEN_NAME)->plainTextToken;
