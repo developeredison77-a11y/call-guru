@@ -144,42 +144,21 @@
                                                     "type": "string",
                                                     "example": "Success"
                                                 },
-                                                "isNewUser": {
-                                                    "type": "boolean",
-                                                    "example": false
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
                                                 },
-                                                "token": {
+                                                "name": {
                                                     "type": "string",
-                                                    "example": "1|sanctum_token_here"
+                                                    "example": "Rahul"
                                                 },
-                                                "user": {
-                                                    "properties": {
-                                                        "id": {
-                                                            "type": "integer",
-                                                            "example": 1
-                                                        },
-                                                        "name": {
-                                                            "type": "string",
-                                                            "example": "Rahul"
-                                                        },
-                                                        "countryCode": {
-                                                            "type": "string",
-                                                            "example": "+91"
-                                                        },
-                                                        "mobileNumber": {
-                                                            "type": "string",
-                                                            "example": "9876543210"
-                                                        },
-                                                        "age": {
-                                                            "type": "integer",
-                                                            "example": 30
-                                                        },
-                                                        "sex": {
-                                                            "type": "string",
-                                                            "example": "Male"
-                                                        }
-                                                    },
-                                                    "type": "object"
+                                                "accessToken": {
+                                                    "type": "string",
+                                                    "example": "1|sanctum_access_token_here"
+                                                },
+                                                "refreshToken": {
+                                                    "type": "string",
+                                                    "example": "2|sanctum_refresh_token_here"
                                                 }
                                             },
                                             "type": "object"
@@ -225,6 +204,26 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "Inactive user account",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Your account is inactive. Please contact the administrator."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -259,9 +258,10 @@
                                         "type": "string",
                                         "example": "Rahul"
                                     },
-                                    "age": {
-                                        "type": "integer",
-                                        "example": 30
+                                    "date_of_birth": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "1996-05-28T00:00:00.000Z"
                                     },
                                     "sex": {
                                         "type": "string",
@@ -271,6 +271,17 @@
                                             "Female",
                                             "Other"
                                         ]
+                                    },
+                                    "languages": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ],
+                                        "nullable": true
                                     }
                                 },
                                 "type": "object"
@@ -293,38 +304,21 @@
                                             "type": "string",
                                             "example": "Success"
                                         },
-                                        "token": {
-                                            "type": "string",
-                                            "example": "1|sanctum_token_here"
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
                                         },
-                                        "user": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "Rahul"
-                                                },
-                                                "countryCode": {
-                                                    "type": "string",
-                                                    "example": "+91"
-                                                },
-                                                "mobileNumber": {
-                                                    "type": "string",
-                                                    "example": "9876543210"
-                                                },
-                                                "age": {
-                                                    "type": "integer",
-                                                    "example": 30
-                                                },
-                                                "sex": {
-                                                    "type": "string",
-                                                    "example": "Male"
-                                                }
-                                            },
-                                            "type": "object"
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Test User"
+                                        },
+                                        "accessToken": {
+                                            "type": "string",
+                                            "example": "7|sanctum_access_token_here"
+                                        },
+                                        "refreshToken": {
+                                            "type": "string",
+                                            "example": "8|sanctum_refresh_token_here"
                                         }
                                     },
                                     "type": "object"
@@ -353,6 +347,73 @@
                         }
                     }
                 }
+            }
+        },
+        "/v1/auth/refresh-token": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh access token",
+                "operationId": "7c5de428964f52b67149203c22b3dbb0",
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "accessToken": {
+                                            "type": "string",
+                                            "example": "9|sanctum_access_token_here"
+                                        },
+                                        "refreshToken": {
+                                            "type": "string",
+                                            "example": "10|sanctum_refresh_token_here"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Invalid refresh token or inactive account",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid refresh token."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             }
         },
         "/v1/auth/logout": {
@@ -393,6 +454,53 @@
                     }
                 ]
             }
+        },
+        "/v1/languages": {
+            "get": {
+                "tags": [
+                    "Languages"
+                ],
+                "summary": "List active languages",
+                "operationId": "418d5331301d92365c21e7b7f831904b",
+                "responses": {
+                    "200": {
+                        "description": "Languages retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "languages": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "English"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -409,6 +517,10 @@
         {
             "name": "Auth",
             "description": "OTP based authentication endpoints"
+        },
+        {
+            "name": "Languages",
+            "description": "Public language endpoints"
         }
     ]
 }
