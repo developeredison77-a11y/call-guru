@@ -312,6 +312,16 @@
                                             "type": "string",
                                             "example": "Test User"
                                         },
+                                        "languages": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "integer"
+                                            },
+                                            "example": [
+                                                1,
+                                                2
+                                            ]
+                                        },
                                         "accessToken": {
                                             "type": "string",
                                             "example": "7|sanctum_access_token_here"

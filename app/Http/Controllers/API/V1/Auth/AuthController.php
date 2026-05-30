@@ -191,6 +191,12 @@ class AuthController extends Controller
                         new OA\Property(property: 'message', type: 'string', example: 'Success'),
                         new OA\Property(property: 'id', type: 'integer', example: 1),
                         new OA\Property(property: 'name', type: 'string', example: 'Test User'),
+                        new OA\Property(
+                            property: 'languages',
+                            type: 'array',
+                            items: new OA\Items(type: 'integer'),
+                            example: [1, 2]
+                        ),
                         new OA\Property(property: 'accessToken', type: 'string', example: '7|sanctum_access_token_here'),
                         new OA\Property(property: 'refreshToken', type: 'string', example: '8|sanctum_refresh_token_here'),
                     ]
@@ -215,6 +221,7 @@ class AuthController extends Controller
         return $this->successResponse([
             'id' => $result['user']->id,
             'name' => $result['user']->name,
+            'languages' => $result['user']->languages()->pluck('languages.id'),
             'accessToken' => $result['accessToken'],
             'refreshToken' => $result['refreshToken'],
         ]);
