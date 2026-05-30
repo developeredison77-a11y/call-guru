@@ -9,6 +9,8 @@ COPY nginx-site.conf /etc/nginx/sites-enabled/default.conf
 
 RUN composer install --no-dev --optimize-autoloader
 
+RUN php artisan l5-swagger:generate
+
 RUN php artisan storage:link || true
 
 RUN chmod -R 777 storage bootstrap/cache

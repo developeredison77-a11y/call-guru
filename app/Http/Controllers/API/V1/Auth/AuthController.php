@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\SendOtpRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
-use App\Http\Resources\Auth\UserResource;
 use App\Services\Auth\AuthService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
@@ -96,20 +95,10 @@ class AuthController extends Controller
                             properties: [
                                 new OA\Property(property: 'success', type: 'boolean', example: true),
                                 new OA\Property(property: 'message', type: 'string', example: 'Success'),
-                                new OA\Property(property: 'isNewUser', type: 'boolean', example: false),
-                                new OA\Property(property: 'token', type: 'string', example: '1|sanctum_token_here'),
-                                new OA\Property(
-                                    property: 'user',
-                                    properties: [
-                                        new OA\Property(property: 'id', type: 'integer', example: 1),
-                                        new OA\Property(property: 'name', type: 'string', example: 'Rahul'),
-                                        new OA\Property(property: 'countryCode', type: 'string', example: '+91'),
-                                        new OA\Property(property: 'mobileNumber', type: 'string', example: '9876543210'),
-                                        new OA\Property(property: 'date_of_birth', type: 'string', format: 'date-time', example: '1996-05-28T00:00:00.000Z'),
-                                        new OA\Property(property: 'sex', type: 'string', example: 'Male'),
-                                    ],
-                                    type: 'object'
-                                ),
+                                new OA\Property(property: 'id', type: 'integer', example: 1),
+                                new OA\Property(property: 'name', type: 'string', example: 'Rahul'),
+                                new OA\Property(property: 'accessToken', type: 'string', example: '1|sanctum_access_token_here'),
+                                new OA\Property(property: 'refreshToken', type: 'string', example: '2|sanctum_refresh_token_here'),
                             ],
                             type: 'object'
                         ),
@@ -134,6 +123,16 @@ class AuthController extends Controller
                     ]
                 )
             ),
+            new OA\Response(
+                response: 403,
+                description: 'Inactive user account',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(property: 'message', type: 'string', example: 'Your account is inactive. Please contact the administrator.'),
+                    ]
+                )
+            ),
         ]
     )]
     public function verifyOtp(VerifyOtpRequest $request): JsonResponse
@@ -151,9 +150,10 @@ class AuthController extends Controller
         }
 
         return $this->successResponse([
-            'isNewUser' => false,
-            'token' => $result['token'],
-            'user' => new UserResource($result['user']),
+            'id' => $result['user']->id,
+            'name' => $result['user']->name,
+            'accessToken' => $result['accessToken'],
+            'refreshToken' => $result['refreshToken'],
         ]);
     }
 
@@ -182,19 +182,10 @@ class AuthController extends Controller
                     properties: [
                         new OA\Property(property: 'success', type: 'boolean', example: true),
                         new OA\Property(property: 'message', type: 'string', example: 'Success'),
-                        new OA\Property(property: 'token', type: 'string', example: '1|sanctum_token_here'),
-                        new OA\Property(
-                            property: 'user',
-                            properties: [
-                                new OA\Property(property: 'id', type: 'integer', example: 1),
-                                new OA\Property(property: 'name', type: 'string', example: 'Rahul'),
-                                new OA\Property(property: 'countryCode', type: 'string', example: '+91'),
-                                new OA\Property(property: 'mobileNumber', type: 'string', example: '9876543210'),
-                                new OA\Property(property: 'date_of_birth', type: 'string', format: 'date-time', example: '1996-05-28T00:00:00.000Z'),
-                                new OA\Property(property: 'sex', type: 'string', example: 'Male'),
-                            ],
-                            type: 'object'
-                        ),
+                        new OA\Property(property: 'id', type: 'integer', example: 1),
+                        new OA\Property(property: 'name', type: 'string', example: 'Test User'),
+                        new OA\Property(property: 'accessToken', type: 'string', example: '7|sanctum_access_token_here'),
+                        new OA\Property(property: 'refreshToken', type: 'string', example: '8|sanctum_refresh_token_here'),
                     ]
                 )
             ),
@@ -215,8 +206,10 @@ class AuthController extends Controller
         $result = $this->authService->register($request->validated());
 
         return $this->successResponse([
-            'token' => $result['token'],
-            'user' => new UserResource($result['user']),
+            'id' => $result['user']->id,
+            'name' => $result['user']->name,
+            'accessToken' => $result['accessToken'],
+            'refreshToken' => $result['refreshToken'],
         ]);
     }
 

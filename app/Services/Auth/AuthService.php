@@ -2,6 +2,8 @@
 
 namespace App\Services\Auth;
 
+use App\Enums\UserStatusEnum;
+use App\Enums\UserTypeEnum;
 use App\Exceptions\ApiException;
 use App\Helpers\OtpHelper;
 use App\Repositories\Auth\OtpVerificationRepository;
@@ -18,6 +20,8 @@ class AuthService
     private const OTP_TTL_MINUTES = 5;
 
     private const TOKEN_NAME = 'auth_token';
+
+    private const REFRESH_TOKEN_NAME = 'refresh_token';
 
     public function __construct(
         private readonly OtpVerificationRepository $otpRepository,
@@ -67,11 +71,17 @@ class AuthService
             ];
         }
 
-        $token = $user->createToken(self::TOKEN_NAME)->plainTextToken;
+        if ((int) $user->status === UserStatusEnum::Inactive->value) {
+            throw new ApiException('Your account is inactive. Please contact the administrator.', 403);
+        }
+
+        $accessToken = $user->createToken(self::TOKEN_NAME)->plainTextToken;
+        $refreshToken = $user->createToken(self::REFRESH_TOKEN_NAME, ['refresh'])->plainTextToken;
 
         return [
             'isNewUser' => false,
-            'token' => $token,
+            'accessToken' => $accessToken,
+            'refreshToken' => $refreshToken,
             'user' => $user,
         ];
     }
@@ -100,15 +110,18 @@ class AuthService
                     ? Carbon::parse($payload['date_of_birth'])->toDateString()
                     : null,
                 'sex' => $payload['sex'] ?? null,
+                'status' => UserStatusEnum::Inactive->value,
+                'type' => UserTypeEnum::Listener->value,
             ]);
         });
 
-        $token = $user->createToken(self::TOKEN_NAME)->plainTextToken;
+        $accessToken = $user->createToken(self::TOKEN_NAME)->plainTextToken;
+        $refreshToken = $user->createToken(self::REFRESH_TOKEN_NAME, ['refresh'])->plainTextToken;
 
         return [
-            'token' => $token,
+            'accessToken' => $accessToken,
+            'refreshToken' => $refreshToken,
             'user' => $user,
         ];
     }
-
 }

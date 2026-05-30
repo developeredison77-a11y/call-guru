@@ -14,10 +14,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'superadmin' => \App\Http\Middleware\EnsureSuperAdmin::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (ValidationException $e, $request) {
+            if (! $request->is('api/*')) {
+                return null;
+            }
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage() ?: 'Validation failed',
@@ -26,6 +32,10 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function (\App\Exceptions\ApiException $e, $request) {
+            if (! $request->is('api/*')) {
+                return null;
+            }
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -33,6 +43,10 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function (HttpExceptionInterface $e, $request) {
+            if (! $request->is('api/*')) {
+                return null;
+            }
+
             if ($e->getStatusCode() === 401) {
                 return response()->json([
                     'success' => false,

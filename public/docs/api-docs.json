@@ -144,43 +144,21 @@
                                                     "type": "string",
                                                     "example": "Success"
                                                 },
-                                                "isNewUser": {
-                                                    "type": "boolean",
-                                                    "example": false
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
                                                 },
-                                                "token": {
+                                                "name": {
                                                     "type": "string",
-                                                    "example": "1|sanctum_token_here"
+                                                    "example": "Rahul"
                                                 },
-                                                "user": {
-                                                    "properties": {
-                                                        "id": {
-                                                            "type": "integer",
-                                                            "example": 1
-                                                        },
-                                                        "name": {
-                                                            "type": "string",
-                                                            "example": "Rahul"
-                                                        },
-                                                        "countryCode": {
-                                                            "type": "string",
-                                                            "example": "+91"
-                                                        },
-                                                        "mobileNumber": {
-                                                            "type": "string",
-                                                            "example": "9876543210"
-                                                        },
-                                                        "date_of_birth": {
-                                                            "type": "string",
-                                                            "format": "date-time",
-                                                            "example": "1996-05-28T00:00:00.000Z"
-                                                        },
-                                                        "sex": {
-                                                            "type": "string",
-                                                            "example": "Male"
-                                                        }
-                                                    },
-                                                    "type": "object"
+                                                "accessToken": {
+                                                    "type": "string",
+                                                    "example": "1|sanctum_access_token_here"
+                                                },
+                                                "refreshToken": {
+                                                    "type": "string",
+                                                    "example": "2|sanctum_refresh_token_here"
                                                 }
                                             },
                                             "type": "object"
@@ -220,6 +198,26 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Invalid OTP"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Inactive user account",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Your account is inactive. Please contact the administrator."
                                         }
                                     },
                                     "type": "object"
@@ -295,39 +293,21 @@
                                             "type": "string",
                                             "example": "Success"
                                         },
-                                        "token": {
-                                            "type": "string",
-                                            "example": "1|sanctum_token_here"
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
                                         },
-                                        "user": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "Rahul"
-                                                },
-                                                "countryCode": {
-                                                    "type": "string",
-                                                    "example": "+91"
-                                                },
-                                                "mobileNumber": {
-                                                    "type": "string",
-                                                    "example": "9876543210"
-                                                },
-                                                "date_of_birth": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "example": "1996-05-28T00:00:00.000Z"
-                                                },
-                                                "sex": {
-                                                    "type": "string",
-                                                    "example": "Male"
-                                                }
-                                            },
-                                            "type": "object"
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Test User"
+                                        },
+                                        "accessToken": {
+                                            "type": "string",
+                                            "example": "7|sanctum_access_token_here"
+                                        },
+                                        "refreshToken": {
+                                            "type": "string",
+                                            "example": "8|sanctum_refresh_token_here"
                                         }
                                     },
                                     "type": "object"

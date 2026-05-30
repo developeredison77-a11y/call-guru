@@ -15,12 +15,16 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'country_code' => '+91',
-            'mobile_number' => '9876543210',
-            'date_of_birth' => '1996-05-28',
-            'sex' => 'Male',
-        ]);
+        User::updateOrCreate(
+            [
+                'country_code' => '+91',
+                'mobile_number' => '9876543210',
+            ],
+            [
+                'name' => 'Test User',
+                'date_of_birth' => '1996-05-28',
+                'sex' => 'Male',
+            ],
+        );
     }
 }
