@@ -115,8 +115,8 @@ class AuthService
                 'type' => UserTypeEnum::Listener->value,
             ]);
 
-            if (isset($payload['language'])) {
-                $user->languages()->attach($payload['language']);
+            if (! empty($payload['languages'])) {
+                $user->languages()->attach($payload['languages']);
             }
 
             return $user;

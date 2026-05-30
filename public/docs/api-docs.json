@@ -272,9 +272,15 @@
                                             "Other"
                                         ]
                                     },
-                                    "language": {
-                                        "type": "integer",
-                                        "example": 1,
+                                    "languages": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ],
                                         "nullable": true
                                     }
                                 },

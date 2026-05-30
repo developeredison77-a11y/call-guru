@@ -171,7 +171,13 @@ class AuthController extends Controller
                     new OA\Property(property: 'name', type: 'string', example: 'Rahul'),
                     new OA\Property(property: 'date_of_birth', type: 'string', format: 'date-time', example: '1996-05-28T00:00:00.000Z'),
                     new OA\Property(property: 'sex', type: 'string', enum: ['Male', 'Female', 'Other'], example: 'Male'),
-                    new OA\Property(property: 'language', type: 'integer', nullable: true, example: 1),
+                    new OA\Property(
+                        property: 'languages',
+                        type: 'array',
+                        nullable: true,
+                        items: new OA\Items(type: 'integer'),
+                        example: [1, 2]
+                    ),
                 ]
             )
         ),
